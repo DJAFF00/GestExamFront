@@ -1,0 +1,165 @@
+<!-- app.component.html -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="http://localhost:4200">GestExam</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:4200">Etudiants</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:4200/ecoles">Ecoles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:4200/filieres">Filieres</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:4200/examens">Examens</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2 class="mb-4">Gestion des Etudiants</h2>
+  <!-- Formulaire d'ajoute -->
+  <div class="card p-3 mb-4">
+    <h5>Ajouter un nouvel etudiant</h5>
+    <form (ngSubmit)="ajouterEtudiant()">
+      <div class="form-group mb-2">
+        <label>Nom :</label>
+        <input type="text" class="form-control" name="Nom" [(ngModel)]="nouvelEtudiant.nom" required>
+      </div>
+  
+      <div class="form-group mb-2">
+        <label>Prenom :</label>
+        <input type="text" class="form-control mt-2" name="Prenom" [(ngModel)]="nouvelEtudiant.prenom" required>
+      </div>
+  
+      <div class="form-group mb-2">
+        <label>Sexe :</label>
+        <select class="form-control mt-2" name="Sexe" [(ngModel)]="nouvelEtudiant.sexe" required>
+          <option value="" disabled selected>Sexe</option>
+          <option value="H">Homme</option>
+          <option value="F">Femme</option>
+        </select>
+      </div>
+  
+      <div class="form-group mb-2">
+        <label>Adresse :</label>
+        <input type="text" class="form-control mt-2" name="Adresse" [(ngModel)]="nouvelEtudiant.adresse" required>
+      </div>
+  
+      <div class="form-group mb-2">
+        <label>Tel :</label>
+        <input type="text" class="form-control mt-2" name="Tel" [(ngModel)]="nouvelEtudiant.tel" required>
+      </div>
+  
+      <div class="form-group mb-2">
+        <label>Ecole :</label>
+        <select class="form-control mt-2" name="ecole_id" [(ngModel)]="nouvelEtudiant.ecole_id" required>
+          <option value="" disabled selected>Ecole</option>
+          <option *ngFor="let ecole of ecoles" [value]="ecole.id">{{ ecole.Designation }}</option>
+        </select>
+      </div>
+  
+      <div class="form-group mb-2">
+        <label>Filiere :</label>
+        <select class="form-control mt-2" name="filiere_id" [(ngModel)]="nouvelEtudiant.filiere_id" required>
+          <option value="" disabled selected>Filiere</option>
+          <option *ngFor="let filiere of filieres" [value]="filiere.id">{{ filiere.Libelle }}</option>
+        </select>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+  </div>
+
+  <!-- etudiants.component.html -->
+  <div class="container mt-3">
+    <h2>Liste des Étudiants</h2>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Sexe</th>
+          <th>Adresse</th>
+          <th>Téléphone</th>
+          <th>École</th>
+          <th>Filière</th>
+          <th>Actions</th> 
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let etu of etudiants; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ etu.Nom }}</td>
+          <td>{{ etu.Prenom }}</td>
+          <td>{{ etu.Sexe }}</td>
+          <td>{{ etu.Adresse }}</td>
+          <td>{{ etu.Tel }}</td>
+          <td>{{ etu.ecole.Designation }}</td>
+          <td>{{ etu.filiere.Libelle }}</td> 
+          <td>
+            <button class="btn btn-warning btn-sm me-2" (click)="modifierEtudiant(etu)">Modifier</button>
+            <button class="btn btn-danger btn-sm" (click)="supprimerEtudiant(etu.id!)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="etudiantSelectionne" class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title">Modifier l'étudiant</h5>
+          <button type="button" class="btn-close" (click)="etudiantSelectionne = null"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="enregistrerModification()" #formModification="ngForm">
+            <div class="mb-3">
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" class="form-control" id="nom" name="Nom" [(ngModel)]="etudiantSelectionne.Nom" required>
+            </div>
+            <div class="mb-3">
+              <label for="prenom" class="form-label">Prénom</label>
+              <input type="text" class="form-control" id="prenom" name="Prenom" [(ngModel)]="etudiantSelectionne.Prenom" required>
+            </div>
+            <select class="form-control mt-3" name="Sexe" [(ngModel)]="etudiantSelectionne.Sexe" required>
+              <option value="" disabled selected>Sexe</option>
+              <option value="H">Homme</option>
+              <option value="F">Femme</option>
+            </select>
+            <div class="mb-3">
+              <label for="adresse" class="form-label">Adresse</label>
+              <input type="text" class="form-control" id="adresse" name="Adresse" [(ngModel)]="etudiantSelectionne.Adresse" required>
+            </div>
+            <div class="mb-3">
+              <label for="tel" class="form-label">Tel</label>
+              <input type="text" class="form-control" id="tel" name="Tel" [(ngModel)]="etudiantSelectionne.Tel" required>
+            </div>
+            <select class="form-control mt-2" name="ecole_id" [(ngModel)]="etudiantSelectionne.ecole_id" required>
+              <option value="" disabled>Ecole</option>
+              <option *ngFor="let ecole of ecoles" [value]="ecole.id">{{ ecole.Designation }}</option>
+            </select>
+            <select class="form-control mt-3" name="filiere_id" [(ngModel)]="etudiantSelectionne.filiere_id" required>
+              <option value="" disabled>Filiere</option>
+              <option *ngFor="let filiere of filieres" [value]="filiere.id">{{ filiere.Libelle }}</option>
+            </select>
+            <div class="d-flex justify-content-end mt-2">
+              <button type="submit" class="btn btn-primary me-2" [disabled]="formModification.invalid">Enregistrer</button>
+              <button type="button" class="btn btn-secondary" (click)="etudiantSelectionne = null">Annuler</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

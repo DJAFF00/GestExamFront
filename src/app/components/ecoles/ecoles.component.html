@@ -1,0 +1,91 @@
+<!-- app.component.html -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="http://localhost:4200">GestExam</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:4200">Etudiants</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:4200/ecoles">Ecoles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:4200/filieres">Filieres</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:4200/examens">Examens</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-4">
+    <h2 class="mb-4">Gestion des Ecoles</h2>
+  <!-- Formulaire d’ajout -->
+  <div class="card p-3 mb-4">
+    <h5>Ajouter une nouvelle ecole</h5>
+    <form (ngSubmit)="ajouterEcole()">
+      <div class="form-group mb-2">
+        <label>Sigle</label>
+        <input type="text" class="form-control" [(ngModel)]="nouvelleEcole.Sigle" name="sigle" required>
+      </div>
+
+      <div class="form-group mb-2">
+        <label>Désignation</label>
+        <input type="text" class="form-control" [(ngModel)]="nouvelleEcole.Designation" name="designation" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Ajouter</button>
+  </form>
+  </div>
+  
+ 
+  
+  <!-- Liste des écoles -->
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Sigle</th>
+        <th>Désignation</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ecole of ecoles; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ ecole.Sigle }}</td>
+        <td>{{ ecole.Designation }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm me-2" (click)="modifierEcole(ecole)">Modifier</button>
+          <button class="btn btn-danger btn-sm" (click)="supprimerEcole(ecole.id!)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- Modal de modification (simplifié, sans Bootstrap Modal) -->
+  <div *ngIf="ecoleSelectionnee" class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+        <h5 class="modal-title">Modifier l’école</h5>
+        <form (ngSubmit)="enregistrerModification()" #formModif="ngForm">
+          <div class="mb-3">
+            <label>Sigle</label>
+            <input type="text" class="form-control" [(ngModel)]="ecoleSelectionnee.Sigle" name="sigleModif" required>
+          </div>
+          <div class="mb-3">
+            <label>Désignation</label>
+            <input type="text" class="form-control" [(ngModel)]="ecoleSelectionnee.Designation" name="designationModif" required>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary me-2" [disabled]="formModif.invalid">Enregistrer</button>
+            <button type="button" class="btn btn-secondary" (click)="ecoleSelectionnee = null">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+  </div>
+    
